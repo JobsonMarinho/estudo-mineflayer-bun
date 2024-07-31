@@ -9,6 +9,17 @@ function login() {
     port: 25565,
     username: env.USERNAME,
     auth: env.TYPE,
+    brand: "LunarClient:a1f71bc",
+    physicsEnabled: true,
+    skipValidation: false,
+    hideErrors: false,
+  })
+
+  bot.once("spawn", () => {
+    bot.setControlState('forward', true)
+    bot.setControlState('back', true)
+    bot.setControlState('left', true)
+    bot.setControlState('right', true)
   })
 
   const autoMessage = setInterval(() => {
