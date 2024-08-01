@@ -36,10 +36,6 @@ function login() {
     }
   }, 60000)
 
-  bot.on('login', () => {
-    console.log('[System] Logado com sucesso!')
-  })
-
   bot.on('chat', (username, message) => {
     if (username === bot.username) return
 
