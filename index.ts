@@ -92,10 +92,11 @@ function login() {
   function reconnect() {
     loggedIn = false
     clearInterval(autoMessage)
+    console.log('[System] Reconectando em 15 segundos...')
     setTimeout(() => {
       console.log('[System] Tentando reconectar...')
       login()
-    }, 5000)
+    }, 15000)
   }
 }
 
