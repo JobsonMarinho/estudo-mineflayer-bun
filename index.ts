@@ -4,10 +4,15 @@ import { env } from './env'
 let loggedIn = false
 
 function login() {
+  console.log('[System] Iniciando bot')
+  console.log('[System] Usuário:', env.NICKNAME)
+  console.log('[System] Tipo de conta:', env.TYPE)
+  console.log('[System] IP do servidor:', env.SERVER_IP)
+
   const bot = mineflayer.createBot({
     host: env.SERVER_IP,
     port: 25565,
-    username: env.USERNAME,
+    username: env.NICKNAME,
     auth: env.TYPE,
     brand: "LunarClient:a1f71bc",
     physicsEnabled: true,
@@ -25,10 +30,15 @@ function login() {
   const autoMessage = setInterval(() => {
     if (loggedIn) {
       bot.chat(env.AFK_COMMAND)
+      bot.setControlState('jump', true)
     } else {
       clearInterval(autoMessage)
     }
   }, 60000)
+
+  bot.on('login', () => {
+    console.log('[System] Logado com sucesso!')
+  })
 
   bot.on('chat', (username, message) => {
     if (username === bot.username) return
@@ -36,25 +46,41 @@ function login() {
     if (env.SHOW_MESSAGES)
       console.log(`[${username}] ${message}`)
 
-    if (message === env.LOGIN_MESSAGE) {
-      setTimeout(() => {
-        console.log('[System] Conectado ao Lobby indo para o Servidor...')
-        bot.chat(env.LOGIN_COMMAND)
-      }, 2000)
+    if (message === env.PRE_LOGIN_MESSAGE) {
+      console.log('[System] Fazendo login...')
+      bot.chat(env.PRE_LOGIN_COMMAND)
     }
+
+    if (env.LOGIN_MESSAGE.includes('§')) {
+      let splitMessage = env.LOGIN_MESSAGE.split('§')
+      let message1 = splitMessage[0]
+      let message2 = splitMessage[1]
+      if (message === message1 || message === message2) {
+        setTimeout(() => {
+          console.log('[System] Conectado ao Lobby indo para o Servidor...')
+          bot.chat(env.LOGIN_COMMAND)
+        }, 2000)
+      }
+    }
+    else
+      if (message === env.LOGIN_MESSAGE) {
+        setTimeout(() => {
+          console.log('[System] Conectado ao Lobby indo para o Servidor...')
+          bot.chat(env.LOGIN_COMMAND)
+        }, 2000)
+      }
 
     if (message === env.SERVER_MESSAGE) {
       setTimeout(() => {
         loggedIn = true
         console.log('[System] Conectado ao Servidor')
         bot.chat(env.SERVER_COMMAND)
-        bot.look(1.0, 1.5, false)
       }, 2000)
     }
   })
 
-  bot.on('kicked', () => {
-    console.log('[System] Fui expulso, tentando reconectar...')
+  bot.on('kicked', (e) => {
+    console.log('[System] Fui expulso por:', e)
     reconnect()
   })
 

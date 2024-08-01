@@ -4,11 +4,17 @@ const envSchema = z.object({
   SERVER_IP: z.string({
     description: "The server IP to connect to",
   }),
-  USERNAME: z.string({
-    description: "The username to log in with",
+  NICKNAME: z.string({
+    description: "The nickname to log in with",
   }),
   TYPE: z.enum(["microsoft", "mojang", "offline"], {
     description: "The type of account to log in with",
+  }),
+  PRE_LOGIN_MESSAGE: z.string({
+    description: "The message to listen for to log in",
+  }),
+  PRE_LOGIN_COMMAND: z.string({
+    description: "The command to run before logging in",
   }),
   LOGIN_MESSAGE: z.string({
     description: "The message to listen for to log in",
